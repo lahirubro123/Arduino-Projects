@@ -1,4 +1,5 @@
-//Code  by Lahiru Sandaruwan
+// Code  by Lahiru Sandaruwan
+// DS3231.h - http://www.rinkydinkelectronics.com/library.php?id=73
 
 
 #include "SevSeg.h"
