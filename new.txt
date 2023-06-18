@@ -1,1 +1,305 @@
 
+mixed-port: 7890
+allow-lan: false
+log-level: info
+secret: 
+external-controller: 127.0.0.1:9090
+# ipv6: false
+ipv6: true
+mode: rule
+dns:
+  enable: true
+  use-hosts: true
+  # ipv6: false
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  listen: 127.0.0.1:6868
+  fake-ip-filter:
+     - "hiddify.bunnyscloud.xyz"
+     - "www.kasr-alsanam.com"
+  default-nameserver:
+    - 1.1.1.1
+    - 8.8.8.8
+    - 1.0.0.1
+  nameserver:
+#    - https://hiddify.bunnyscloud.xyz/tw9zWhRvquuRuYG/dns/dns-query
+    - 8.8.8.8
+    - 1.1.1.1
+profile:
+  # Storing select records
+  store-selected: true
+
+proxy-groups:
+  - name: PROXY
+    proxies:
+      - automatic
+      - sequential 
+      - hiddify.bunnyscloud.xyz http_WS_direct_vmess 80 3
+      - hiddify.bunnyscloud.xyz tls_h2_WS_direct_trojan 443 3
+      - hiddify.bunnyscloud.xyz tls_h2_grpc_direct_trojan 443 3
+      - hiddify.bunnyscloud.xyz tls_WS_direct_trojan 443 3
+      - hiddify.bunnyscloud.xyz tls_WS_direct_vmess 443 3
+      - hiddify.bunnyscloud.xyz tls_grpc_direct_trojan 443 3
+      - hiddify.bunnyscloud.xyz tls_grpc_direct_vmess 443 3
+
+      
+    # use:
+    #   %for phttp in hconfigs[ConfigEnum.http_ports].split(',')
+    #   - all_proxies_
+    #   %endfor
+    #   %for ptls in hconfigs[ConfigEnum.tls_ports].split(',')
+    #   - all_proxies_
+    #   %endfor
+    type: select
+
+
+  
+
+  
+
+
+
+  - name: automatic
+    type: fallback
+    url: "http://cp.cloudflare.com"
+    interval: 300
+    proxies:
+        # - "load-balance"
+        - auto
+        - sequential
+        - REJECT
+    lazy: true
+
+
+
+
+  - name: sequential
+    type: fallback
+    url: "http://cp.cloudflare.com"
+    interval: 300
+    proxies:
+      - hiddify.bunnyscloud.xyz http_WS_direct_vmess 80 3
+      - hiddify.bunnyscloud.xyz tls_h2_WS_direct_trojan 443 3
+      - hiddify.bunnyscloud.xyz tls_h2_grpc_direct_trojan 443 3
+      - hiddify.bunnyscloud.xyz tls_WS_direct_trojan 443 3
+      - hiddify.bunnyscloud.xyz tls_WS_direct_vmess 443 3
+      - hiddify.bunnyscloud.xyz tls_grpc_direct_trojan 443 3
+      - hiddify.bunnyscloud.xyz tls_grpc_direct_vmess 443 3
+
+    # use:
+    #   %for phttp in hconfigs[ConfigEnum.http_ports].split(',')
+    #   - all_proxies_
+    #   %endfor
+    #   %for ptls in hconfigs[ConfigEnum.tls_ports].split(',')
+    #   - all_proxies_
+    #   %endfor
+
+  - name: auto
+    proxies:
+      - hiddify.bunnyscloud.xyz http_WS_direct_vmess 80 3
+      - hiddify.bunnyscloud.xyz tls_h2_WS_direct_trojan 443 3
+      - hiddify.bunnyscloud.xyz tls_h2_grpc_direct_trojan 443 3
+      - hiddify.bunnyscloud.xyz tls_WS_direct_trojan 443 3
+      - hiddify.bunnyscloud.xyz tls_WS_direct_vmess 443 3
+      - hiddify.bunnyscloud.xyz tls_grpc_direct_trojan 443 3
+      - hiddify.bunnyscloud.xyz tls_grpc_direct_vmess 443 3
+
+    # use:
+    #   %for phttp in hconfigs[ConfigEnum.http_ports].split(',')
+    #   - all_proxies_
+    #   %endfor
+    #   %for ptls in hconfigs[ConfigEnum.tls_ports].split(',')
+    #   - all_proxies_
+    #   %endfor
+
+    type: url-test
+    url: http://cp.cloudflare.com
+    interval: 300
+    tolerance: 150
+    lazy: true
+
+
+     
+proxies:
+- name: hiddify.bunnyscloud.xyz http_WS_direct_vmess 80 3
+  type: vmess
+  server: hiddify.bunnyscloud.xyz
+  port: 80
+  alpn:
+  - http/1.1
+  uuid: 16720bd6-08de-4246-a53f-3239f9d9e609
+  servername: hiddify.bunnyscloud.xyz
+  tls: false
+  alterId: 0
+  cipher: chacha20-poly1305
+  udp: true
+  skip-cert-verify: false
+  network: ws
+  ws-opts:
+    path: /SS3QR3MDh1IMfo9cbV
+    headers:
+      Host: docs.google.com
+- name: hiddify.bunnyscloud.xyz tls_h2_WS_direct_trojan 443 3
+  type: trojan
+  server: hiddify.bunnyscloud.xyz
+  port: 443
+  alpn:
+  - h2
+  password: 16720bd6-08de-4246-a53f-3239f9d9e609
+  sni: hiddify.bunnyscloud.xyz
+  udp: true
+  skip-cert-verify: false
+  network: ws
+  ws-opts:
+    path: /M16WOQ3Ur1IMfo9cbV
+    headers:
+      Host: docs.google.com
+- name: hiddify.bunnyscloud.xyz tls_h2_grpc_direct_trojan 443 3
+  type: trojan
+  server: hiddify.bunnyscloud.xyz
+  port: 443
+  alpn:
+  - h2
+  password: 16720bd6-08de-4246-a53f-3239f9d9e609
+  sni: hiddify.bunnyscloud.xyz
+  udp: true
+  skip-cert-verify: false
+  network: grpc
+  grpc-opts:
+    grpc-service-name: M16WOQ3UrPc8xQuxqr
+- name: hiddify.bunnyscloud.xyz tls_WS_direct_trojan 443 3
+  type: trojan
+  server: hiddify.bunnyscloud.xyz
+  port: 443
+  alpn:
+  - http/1.1
+  password: 16720bd6-08de-4246-a53f-3239f9d9e609
+  sni: hiddify.bunnyscloud.xyz
+  udp: true
+  skip-cert-verify: false
+  network: ws
+  ws-opts:
+    path: /M16WOQ3Ur1IMfo9cbV
+    headers:
+      Host: docs.google.com
+- name: hiddify.bunnyscloud.xyz tls_WS_direct_vmess 443 3
+  type: vmess
+  server: hiddify.bunnyscloud.xyz
+  port: 443
+  alpn:
+  - http/1.1
+  uuid: 16720bd6-08de-4246-a53f-3239f9d9e609
+  servername: hiddify.bunnyscloud.xyz
+  tls: true
+  alterId: 0
+  cipher: chacha20-poly1305
+  udp: true
+  skip-cert-verify: false
+  network: ws
+  ws-opts:
+    path: /SS3QR3MDh1IMfo9cbV
+    headers:
+      Host: docs.google.com
+- name: hiddify.bunnyscloud.xyz tls_grpc_direct_trojan 443 3
+  type: trojan
+  server: hiddify.bunnyscloud.xyz
+  port: 443
+  alpn:
+  - http/1.1
+  password: 16720bd6-08de-4246-a53f-3239f9d9e609
+  sni: hiddify.bunnyscloud.xyz
+  udp: true
+  skip-cert-verify: false
+  network: grpc
+  grpc-opts:
+    grpc-service-name: M16WOQ3UrPc8xQuxqr
+- name: hiddify.bunnyscloud.xyz tls_grpc_direct_vmess 443 3
+  type: vmess
+  server: hiddify.bunnyscloud.xyz
+  port: 443
+  alpn:
+  - http/1.1
+  uuid: 16720bd6-08de-4246-a53f-3239f9d9e609
+  servername: hiddify.bunnyscloud.xyz
+  tls: true
+  alterId: 0
+  cipher: chacha20-poly1305
+  udp: true
+  skip-cert-verify: false
+  network: grpc
+  grpc-opts:
+    grpc-service-name: SS3QR3MDhPc8xQuxqr
+
+
+# proxy-providers:
+#   %for t in (['http','tls'] if hconfigs[ConfigEnum.http_proxy_enable] else ['tls'])
+#   %for port in hconfigs[ConfigEnum.http_ports if t=='http' else ConfigEnum.tls_ports].split(',')
+#   %set phttp=port if t=='http' else None
+#   %set ptls=port if t=='tls' else None
+#   all_proxies_:
+#     type: http
+#     url: "https://hiddify.bunnyscloud.xyz/tw9zWhRvquuRuYG/16720bd6-08de-4246-a53f-3239f9d9e609/clash/normal/proxies.yml?mode=new&ptls=&phttp=&438173"
+#     # path: hiddify.bunnyscloud.xyz/16720bd6-08de-4246-a53f-3239f9d9e609-normal---proxies438173.yaml
+#     path: hiddify.bunnyscloud.xyz/--438173.yaml
+#     health-check:
+#       enable: true
+#       interval: 600
+#       url: http://www.gstatic.com/generate_204    
+#   %endfor
+#   %endfor
+rule-providers:
+
+  blocked:
+    type: http
+    behavior: classical
+    url: "https://hiddify.bunnyscloud.xyz/tw9zWhRvquuRuYG/clash/rules/blocked-sites.yml"
+    path: ./ruleset/blocked.yaml
+    interval: 432000
+
+  tmpblocked:
+    type: http
+    behavior: classical
+    url: "https://hiddify.bunnyscloud.xyz/tw9zWhRvquuRuYG/clash/rules/tmp-blocked-sites.yml"
+    path: ./ruleset/tmpblocked.yaml
+    interval: 432000
+
+  open:
+    type: http
+    behavior: classical
+    url: "https://hiddify.bunnyscloud.xyz/tw9zWhRvquuRuYG/clash/rules/open-sites.yml"
+    path: ./ruleset/open.yaml
+    interval: 432000    
+
+  # ads:
+  #   type: http
+  #   behavior: classical
+  #   url: "https://hiddify.bunnyscloud.xyz/tw9zWhRvquuRuYG/clash/rules/ads-sites.yml"
+  #   path: ./ruleset/ads.yaml
+  #   interval: 432000   
+
+rules:
+  - DOMAIN,www.kasr-alsanam.com,DIRECT
+  # - DOMAIN,hiddify.bunnyscloud.xyz,DIRECT
+  # - DOMAIN,,DIRECT
+  # - IP-CIDR,/32,DIRECT
+  - IP-CIDR,10.10.34.0/24,PROXY
+  - RULE-SET,tmpblocked,PROXY
+  - RULE-SET,blocked,PROXY
+  # - IP-CIDR,10.10.34.0/24,REJECT
+  # - RULE-SET,tmpblocked,REJECT
+  # - RULE-SET,blocked,REJECT
+  - GEOIP,IR,PROXY
+  - DOMAIN-SUFFIX,.ir,PROXY
+  - RULE-SET,open,PROXY
+  # - RULE-SET,ads,REJECT
+  - MATCH,PROXY
+
+
+tun:
+  enable: true
+  stack: system # or gvisor
+  dns-hijack:
+    - any:53
+  auto-redir: true
+  auto-route: true
+  auto-detect-interface: true
